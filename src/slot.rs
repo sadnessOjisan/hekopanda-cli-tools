@@ -1,11 +1,3 @@
-use std::sync::Arc;
-
-use channel::unbounded;
-use crossbeam::{
-    self,
-    channel::{self, Receiver, Sender},
-};
-use tokio::{self, spawn};
 #[derive(Debug)]
 pub struct NumState {
     pub num: u8,
@@ -14,8 +6,6 @@ pub struct NumState {
 
 #[derive(Debug)]
 pub struct Slot {
-    pub tx: Sender<bool>,
-    rx: Receiver<bool>,
     pub output: (NumState, NumState, NumState),
 }
 
@@ -27,10 +17,7 @@ pub enum Position {
 
 impl Slot {
     pub fn new() -> Self {
-        let (tx, rx) = unbounded();
         Slot {
-            tx,
-            rx,
             output: (
                 NumState {
                     num: 0,
@@ -49,7 +36,7 @@ impl Slot {
     }
 
     pub fn spin(&mut self) {
-        if (!self.output.0.is_stoped) {
+        if !self.output.0.is_stoped {
             let new_num = self.increment_slot(self.output.0.num);
             self.output.0.num = new_num;
         }
@@ -57,7 +44,7 @@ impl Slot {
             let new_num = self.increment_slot(self.output.1.num);
             self.output.1.num = new_num;
         }
-        if (!self.output.2.is_stoped) {
+        if !self.output.2.is_stoped {
             let new_num = self.increment_slot(self.output.2.num);
             self.output.2.num = new_num;
         }
@@ -82,10 +69,10 @@ impl Slot {
     }
 
     fn increment_slot(&self, mut num: u8) -> u8 {
-        if (num < 10) {
+        if num < 10 {
             num += 1;
         }
-        if (num == 10) {
+        if num == 10 {
             num = 0;
         }
         num

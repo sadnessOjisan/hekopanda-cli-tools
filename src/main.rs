@@ -15,9 +15,6 @@ extern crate ncurses;
 use hekopanda_cli_tools::slot::Slot;
 use ncurses::*;
 
-static WINDOW_HEIGHT: i32 = 3;
-static WINDOW_WIDTH: i32 = 10;
-
 fn main() {
     // /* Setup ncurses. */
     initscr();
@@ -39,7 +36,7 @@ fn main() {
         // getch();
         // addstr(&c.to_string());
         slot.spin();
-        if (slot.is_finish()) {
+        if slot.is_finish() {
             break;
         }
         insstr(
