@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 crossbeam = "0.8.1"
+crossbeam-channel = "0.5.2"
 ncurses = "5.101.0"

@@ -37,18 +37,23 @@ fn main() {
 
     let mut c = 0;
     let mut slot = Slot::new();
-    slot.do_slot();slot.tx.send(true);
+    slot.tx.send(false);
+    slot.tx.send(false);
+    slot.do_slot();
+    slot.tx.send(false);
+    println!("f");
+   
     loop {
-        println!("a");
         // getch();
-        addstr(&c.to_string());
-      let res = slot.tx.send(true);
-      println!("{:?}",res);
+        // addstr(&c.to_string());
+        let control = slot.tx.clone();
+        let res =control.send(false);
+        println!("{:?}", slot);
         if (slot.is_finish()) {
             break;
         }
         refresh(); // 文字出
-        c+=1;
+        c += 1;
     }
     endwin();
 }

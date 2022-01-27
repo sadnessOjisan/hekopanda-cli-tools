@@ -1,10 +1,9 @@
-use std::{
-    sync::{
-        mpsc::{self, channel, Receiver, Sender},
-        Arc,
-    },
-    thread::spawn,
+use channel::unbounded;
+use crossbeam::{
+    self,
+    channel::{self, Receiver, Sender},
 };
+use std::{sync::Arc, thread::spawn};
 
 #[derive(Debug)]
 struct NumState {
@@ -21,7 +20,7 @@ pub struct Slot {
 
 impl Slot {
     pub fn new() -> Self {
-        let (tx, rx) = mpsc::channel::<bool>();
+        let (tx, rx) = unbounded();
         Slot {
             tx,
             rx,
@@ -44,30 +43,41 @@ impl Slot {
 
     pub fn do_slot(self: &mut Self) {
         // https://qiita.com/yasuyuky/items/0856343e087c65aa6ff4
-        crossbeam::scope(|scope| {
-           scope.spawn(|_|{
-                while let should_stop_= self.rx.recv(){
-                    println!("hey");
-                    println!("{:?}", should_stop_);
-                    if (!self.output.0.is_stoped) {
-                        self.increment_slot(self.output.0.num);
-                        if (should_stop_.unwrap() == true) {
-                            self.output.0.is_stoped = true;
+        let a = crossbeam::scope(|scope| {
+            scope.spawn(|_| {
+                loop {
+                    // println!("a");
+                    let should_stop_ = self.rx.try_recv();
+                    match should_stop_ {
+                        Ok(should_stop_) => {
+                            println!("{}",should_stop_);
+                            if (!self.output.0.is_stoped) {
+                                self.increment_slot(self.output.0.num);
+                                if (should_stop_ == true) {
+                                    self.output.0.is_stoped = true;
+                                }
+                            }
+                            if !self.output.1.is_stoped {
+                                self.increment_slot(self.output.1.num);
+                                if (should_stop_ == true) {
+                                    self.output.1.is_stoped = true;
+                                }
+                            }
+                            if (!self.output.2.is_stoped) {
+                                self.increment_slot(self.output.2.num);
+                                if (should_stop_ == true) {
+                                    self.output.2.is_stoped = true;
+                                }
+                            }
                         }
-                    }
-                    if !self.output.1.is_stoped {
-                        self.increment_slot(self.output.1.num);
-                        if (should_stop_.unwrap() == true) {
-                            self.output.1.is_stoped = true;
-                        }
-                    }
-                    if (!self.output.2.is_stoped) {
-                        self.increment_slot(self.output.2.num);
-                        if (should_stop_.unwrap() == true) {
-                            self.output.2.is_stoped = true;
+                        Err(_) => {
+                            // println!("err");
                         }
                     }
                 }
+                // while let should_stop_= self.rx.try_recv(){
+
+                // }
             });
         });
     }
