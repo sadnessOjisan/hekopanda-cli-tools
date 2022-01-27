@@ -8,7 +8,7 @@ use crossbeam::{
 use tokio::{self, spawn};
 #[derive(Debug)]
 pub struct NumState {
-    num: u8,
+    pub num: u8,
     is_stoped: bool,
 }
 

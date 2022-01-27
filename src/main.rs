@@ -20,8 +20,8 @@ static WINDOW_WIDTH: i32 = 10;
 
 fn main() {
     // /* Setup ncurses. */
-    // initscr();
-    // raw();
+    initscr();
+    raw();
 
     // /* Allow for extended keyboard (like F1). */
     // keypad(stdscr(), true);
@@ -31,9 +31,9 @@ fn main() {
     // curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE);
 
     // /* Status/help info. */
-    // addstr("Let's start slot\n");
+    addstr("Let's start slot\n");
     // addstr("Use the arrow keys to move");
-    // refresh(); // 文字出力に必要
+    refresh(); // 文字出力に必要
     let mut slot = Slot::new();
     loop {
         // getch();
@@ -42,7 +42,16 @@ fn main() {
         if (slot.is_finish()) {
             break;
         }
-        println!("{:?}", slot.output);
+        insstr(
+            format!(
+                "{}{}{}",
+                slot.output.0.num, slot.output.1.num, slot.output.2.num
+            )
+            .as_str(),
+        );
+        mv(0, 3);
+        clrtoeol();
+        mv(0, 0);
         refresh(); // 文字出
                    // c += 1;
     }
