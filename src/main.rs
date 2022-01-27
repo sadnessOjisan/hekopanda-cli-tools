@@ -1,72 +1,51 @@
+/*
+    Copyright © 2013 Free Software Foundation, Inc
+    See licensing in LICENSE file
+
+    File: examples/ex_4.rs
+    Author: Jesse 'Jeaye' Wilkerson
+    Description:
+      Window creation and input example.
+      Use the cursor keys to move the window
+      around the screen.
+*/
+
 extern crate ncurses;
 
-use std::env;
-use std::io::Read;
-use std::fs;
-use std::path::Path;
+use hekopanda_cli_tools::slot::Slot;
 use ncurses::*;
 
-fn open_file() -> fs::File
-{
-  let args : Vec<_> = env::args().collect();
-  if args.len() != 2
-  {
-    println!("Usage:\n\t{} <rust file>", args[0]);
-    println!("Example:\n\t{} examples/ex_3.rs", args[0]);
-    panic!("Exiting");
-  }
+static WINDOW_HEIGHT: i32 = 3;
+static WINDOW_WIDTH: i32 = 10;
 
-  let reader = fs::File::open(Path::new(&args[1]));
-  reader.ok().expect("Unable to open file")
-}
+fn main() {
+    /* Setup ncurses. */
+    initscr();
+    raw();
 
-fn prompt()
-{
-  addstr("<-Press Any Key->");
-  getch();
-}
+    /* Allow for extended keyboard (like F1). */
+    keypad(stdscr(), true);
+    noecho();
 
-fn main()
-{
-  let reader = open_file().bytes();
+    /* Invisible cursor. */
+    curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE);
 
-  /* Start ncurses. */
-  initscr();
-  keypad(stdscr(), true);
-  noecho();
+    /* Status/help info. */
+    addstr("Let's start slot\n");
+    addstr("Use the arrow keys to move");
+    refresh(); // 文字出力に必要
 
-  /* Get the screen bounds. */
-  let mut max_x = 0;
-  let mut max_y = 0;
-  getmaxyx(stdscr(), &mut max_y, &mut max_x);
-
-  /* Read the whole file. */
-  for ch in reader
-  {
-    if ch.is_err()
-    { break; }
-    let ch = ch.unwrap();
-
-    /* Get the current position on the screen. */
-    let mut cur_x = 0;
-    let mut cur_y = 0;
-    getyx(stdscr(), &mut cur_y, &mut cur_x);
-
-    if cur_y == (max_y - 1)
-    {
-      /* Status bar at the bottom. */
-      prompt();
-
-      /* Once a key is pressed, clear the screen and continue. */
-      clear();
-      mv(0, 0);
+    let mut c = 0;
+    let mut slot = Slot::new();
+    slot.do_slot();
+    loop {
+        // getch();
+        // addstr(&c.to_string());
+        slot.tx.send(true);
+        if (slot.is_finish()) {
+            break;
+        }
+        refresh(); // 文字出
     }
-    
-    addch(ch as chtype);
-  }
-
-  /* Terminate ncurses. */
-  mv(max_y -1, 0);
-  prompt();
-  endwin();
+    endwin();
 }
