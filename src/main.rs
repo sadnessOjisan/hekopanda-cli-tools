@@ -34,26 +34,17 @@ fn main() {
     // addstr("Let's start slot\n");
     // addstr("Use the arrow keys to move");
     // refresh(); // 文字出力に必要
-
-    let mut c = 0;
     let mut slot = Slot::new();
-    slot.tx.send(false);
-    slot.tx.send(false);
-    slot.do_slot();
-    slot.tx.send(false);
-    println!("f");
-   
     loop {
         // getch();
         // addstr(&c.to_string());
-        let control = slot.tx.clone();
-        let res =control.send(false);
-        println!("{:?}", slot);
+        slot.spin();
         if (slot.is_finish()) {
             break;
         }
+        println!("{:?}", slot.output);
         refresh(); // 文字出
-        c += 1;
+                   // c += 1;
     }
     endwin();
 }
