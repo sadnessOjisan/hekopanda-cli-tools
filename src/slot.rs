@@ -43,26 +43,32 @@ impl Slot {
     }
 
     pub fn do_slot(self: &mut Self) {
-        spawn(move || loop {
-            let should_stop = self.rx.recv();
-            if (!self.output.0.is_stoped) {
-                self.increment_slot(self.output.0.num);
-                if (should_stop.unwrap() == true) {
-                    self.output.0.is_stoped = true;
+        // https://qiita.com/yasuyuky/items/0856343e087c65aa6ff4
+        crossbeam::scope(|scope| {
+           scope.spawn(|_|{
+                while let should_stop_= self.rx.recv(){
+                    println!("hey");
+                    println!("{:?}", should_stop_);
+                    if (!self.output.0.is_stoped) {
+                        self.increment_slot(self.output.0.num);
+                        if (should_stop_.unwrap() == true) {
+                            self.output.0.is_stoped = true;
+                        }
+                    }
+                    if !self.output.1.is_stoped {
+                        self.increment_slot(self.output.1.num);
+                        if (should_stop_.unwrap() == true) {
+                            self.output.1.is_stoped = true;
+                        }
+                    }
+                    if (!self.output.2.is_stoped) {
+                        self.increment_slot(self.output.2.num);
+                        if (should_stop_.unwrap() == true) {
+                            self.output.2.is_stoped = true;
+                        }
+                    }
                 }
-            }
-            if !self.output.1.is_stoped {
-                self.increment_slot(self.output.1.num);
-                if (should_stop.unwrap() == true) {
-                    self.output.1.is_stoped = true;
-                }
-            }
-            if (!self.output.2.is_stoped) {
-                self.increment_slot(self.output.2.num);
-                if (should_stop.unwrap() == true) {
-                    self.output.2.is_stoped = true;
-                }
-            }
+            });
         });
     }
 

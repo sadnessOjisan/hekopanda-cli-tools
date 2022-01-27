@@ -19,33 +19,36 @@ static WINDOW_HEIGHT: i32 = 3;
 static WINDOW_WIDTH: i32 = 10;
 
 fn main() {
-    /* Setup ncurses. */
-    initscr();
-    raw();
+    // /* Setup ncurses. */
+    // initscr();
+    // raw();
 
-    /* Allow for extended keyboard (like F1). */
-    keypad(stdscr(), true);
-    noecho();
+    // /* Allow for extended keyboard (like F1). */
+    // keypad(stdscr(), true);
+    // noecho();
 
-    /* Invisible cursor. */
-    curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE);
+    // /* Invisible cursor. */
+    // curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE);
 
-    /* Status/help info. */
-    addstr("Let's start slot\n");
-    addstr("Use the arrow keys to move");
-    refresh(); // 文字出力に必要
+    // /* Status/help info. */
+    // addstr("Let's start slot\n");
+    // addstr("Use the arrow keys to move");
+    // refresh(); // 文字出力に必要
 
     let mut c = 0;
     let mut slot = Slot::new();
-    slot.do_slot();
+    slot.do_slot();slot.tx.send(true);
     loop {
+        println!("a");
         // getch();
-        // addstr(&c.to_string());
-        slot.tx.send(true);
+        addstr(&c.to_string());
+      let res = slot.tx.send(true);
+      println!("{:?}",res);
         if (slot.is_finish()) {
             break;
         }
         refresh(); // 文字出
+        c+=1;
     }
     endwin();
 }
