@@ -1,5 +1,5 @@
-use hekopanda::slot::Slot;
 use clap::Parser;
+use hekopanda::slot::Slot;
 use std::{io::stdin, sync::mpsc::channel, thread::spawn};
 
 #[derive(Parser)]
@@ -7,36 +7,38 @@ use std::{io::stdin, sync::mpsc::channel, thread::spawn};
 struct Cli {
     /// Number of times to greet
     #[clap(short, long)]
-    slot: bool
+    slot: bool,
 }
 
 fn main() {
     let args = Cli::parse();
-    let mut slot = Slot::new();
-    let (tx, rx) = channel::<bool>();
-    spawn(move || loop {
-        let received = rx.try_recv();
-        slot.spin();
-        match received {
-            Ok(should_stop) => {
-                if should_stop {
-                    slot.stop();
+    if args.slot {
+        let mut slot = Slot::new();
+        let (tx, rx) = channel::<bool>();
+        spawn(move || loop {
+            let received = rx.try_recv();
+            slot.spin();
+            match received {
+                Ok(should_stop) => {
+                    if should_stop {
+                        slot.stop();
+                    }
+                    if slot.is_finish() {
+                        break;
+                    }
                 }
-                if slot.is_finish() {
-                    break;
-                }
+                Err(_) => {}
             }
-            Err(_) => {}
-        }
-        print!(
-            "\r{}{}{}🐼",
-            slot.output.0.num, slot.output.1.num, slot.output.2.num
-        );
-    });
+            print!(
+                "\r{}{}{}🐼",
+                slot.output.0.num, slot.output.1.num, slot.output.2.num
+            );
+        });
 
-    loop {
-        let mut guess = String::new();
-        stdin().read_line(&mut guess).expect("Failed to read line.");
-        let _ = tx.send(true);
+        loop {
+            let mut guess = String::new();
+            stdin().read_line(&mut guess).expect("Failed to read line.");
+            let _ = tx.send(true);
+        }
     }
 }
