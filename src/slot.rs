@@ -50,17 +50,18 @@ impl Slot {
         }
     }
 
-    pub fn stop(&mut self, pos: Position) {
-        match pos {
-            Position::First => {
-                self.output.0.is_stoped = true;
-            }
-            Position::Second => {
-                self.output.1.is_stoped = true;
-            }
-            Position::Third => {
-                self.output.2.is_stoped = true;
-            }
+    pub fn stop(&mut self) {
+        if !self.output.0.is_stoped {
+            self.output.0.is_stoped = true;
+            return;
+        }
+        if !self.output.1.is_stoped {
+            self.output.1.is_stoped = true;
+            return;
+        }
+        if !self.output.2.is_stoped {
+            self.output.2.is_stoped = true;
+            return;
         }
     }
 

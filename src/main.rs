@@ -1,32 +1,32 @@
-/*
-    Copyright © 2013 Free Software Foundation, Inc
-    See licensing in LICENSE file
-
-    File: examples/ex_4.rs
-    Author: Jesse 'Jeaye' Wilkerson
-    Description:
-      Window creation and input example.
-      Use the cursor keys to move the window
-      around the screen.
-*/
-
-extern crate ncurses;
-
 use hekopanda_cli_tools::slot::Slot;
-use ncurses::*;
-use std::io::{stdout, Write};
+use std::{io::stdin, sync::mpsc::channel, thread::spawn};
 
 fn main() {
     let mut slot = Slot::new();
-    loop {
+    let (tx, rx) = channel::<bool>();
+    spawn(move || loop {
+        let received = rx.recv();
         slot.spin();
-        if slot.is_finish() {
-            break;
+        match received {
+            Ok(should_stop) => {
+                if should_stop {
+                    slot.stop();
+                }
+                if slot.is_finish() {
+                    break;
+                }
+            }
+            Err(_) => {}
         }
-        stdout().flush();
         print!(
-            "\r{}{}{}",
+            "\r{}{}{}🐼",
             slot.output.0.num, slot.output.1.num, slot.output.2.num
         );
+    });
+
+    loop {
+        let mut guess = String::new();
+        stdin().read_line(&mut guess).expect("Failed to read line.");
+        let _ = tx.send(true);
     }
 }
