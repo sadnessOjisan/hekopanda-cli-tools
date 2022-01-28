@@ -1,7 +1,17 @@
-use hekopanda_cli_tools::slot::Slot;
+use hekopanda::slot::Slot;
+use clap::Parser;
 use std::{io::stdin, sync::mpsc::channel, thread::spawn};
 
+#[derive(Parser)]
+#[clap(version, about, long_about = None)]
+struct Cli {
+    /// Number of times to greet
+    #[clap(short, long)]
+    slot: bool
+}
+
 fn main() {
+    let args = Cli::parse();
     let mut slot = Slot::new();
     let (tx, rx) = channel::<bool>();
     spawn(move || loop {
