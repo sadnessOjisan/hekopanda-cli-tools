@@ -5,7 +5,7 @@ fn main() {
     let mut slot = Slot::new();
     let (tx, rx) = channel::<bool>();
     spawn(move || loop {
-        let received = rx.recv();
+        let received = rx.try_recv();
         slot.spin();
         match received {
             Ok(should_stop) => {
