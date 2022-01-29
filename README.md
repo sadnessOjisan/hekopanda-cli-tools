@@ -14,6 +14,12 @@ TBD
 hekopanda -s
 ```
 
+グラビアモード
+
+```
+hekopanda -g
+```
+
 ## Development🔨
 
 ```

@@ -1,6 +1,6 @@
 [package]
 name = "hekopanda"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2021"
 authors = ["sadnessOjisan <sadness.ojisan@gmail.com>"]
 description="へこぱんだファンによるへこぱんだファンのためのへこぱんだファンツール"
@@ -9,3 +9,4 @@ description="へこぱんだファンによるへこぱんだファンのため�
 
 [dependencies]
 clap = { version = "3.0.13", features = ["derive"] }
+ncurses = "5.101.0"
