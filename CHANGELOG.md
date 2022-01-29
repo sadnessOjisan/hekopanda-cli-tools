@@ -13,8 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - グラビアモードの追加
 
+### Removed
+
+- Linux のサポートを中止
+
 ## [0.0.1] - 2022-01-29
 
 ### Added
 
 - スロットモードの追加
+- Mac / Windows / Linux 向けのバイナリを提供
