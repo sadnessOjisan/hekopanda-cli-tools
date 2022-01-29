@@ -9,11 +9,8 @@ jobs:
     strategy:
       matrix:
         target:
-          - x86_64-pc-windows-msvc
           - x86_64-apple-darwin
         include:
-          - target: x86_64-pc-windows-msvc
-            os: windows-latest
           - target: x86_64-apple-darwin
             os: macos-latest
     runs-on: ${{ matrix.os }}
@@ -38,10 +35,6 @@ jobs:
         with:
           command: build
           args: --release --target=${{ matrix.target }}
-      - name: Package for windows
-        if: matrix.target == 'x86_64-pc-windows-msvc'
-        run: |
-          powershell Compress-Archive -Path target/${{ matrix.target }}/release/hekopanda.exe -DestinationPath hekopanda-${{ matrix.target }}.zip
       - name: Package for macOS
         if: matrix.target == 'x86_64-apple-darwin'
         run: |
