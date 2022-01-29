@@ -1,13 +1,16 @@
 use clap::Parser;
-use hekopanda::slot::Slot;
+use hekopanda::{gravure::print, slot::Slot};
 use std::{io::stdin, sync::mpsc::channel, thread::spawn};
 
 #[derive(Parser)]
 #[clap(version, about, long_about = None)]
 struct Cli {
-    /// Number of times to greet
+    /// スロットモード
     #[clap(short, long)]
     slot: bool,
+    /// グラビアモード
+    #[clap(short, long)]
+    gravure: bool,
 }
 
 fn main() {
@@ -40,5 +43,7 @@ fn main() {
             stdin().read_line(&mut guess).expect("Failed to read line.");
             let _ = tx.send(true);
         }
+    } else if args.gravure {
+        print();
     }
 }

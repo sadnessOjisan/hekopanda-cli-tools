@@ -9,3 +9,4 @@ description="へこぱんだファンによるへこぱんだファンのため�
 
 [dependencies]
 clap = { version = "3.0.13", features = ["derive"] }
+ncurses = "5.101.0"
