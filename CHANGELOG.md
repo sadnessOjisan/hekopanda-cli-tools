@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Linux のサポートを中止
+- Windows のサポートを中止
 
 ## [0.0.1] - 2022-01-29
 

@@ -4,10 +4,11 @@
 
 ## Install💿
 
-| OS      | URL                                                                                                                |
-| ------- | ------------------------------------------------------------------------------------------------------------------ |
-| MacOS   | https://github.com/sadnessOjisan/hekopanda-cli-tools/releases/latest/download/hekopanda-x86_64-apple-darwin.zip    |
-| Windows | https://github.com/sadnessOjisan/hekopanda-cli-tools/releases/latest/download/hekopanda-x86_64-pc-windows-msvc.zip |
+| OS      | URL                                                                                                             |
+| ------- | --------------------------------------------------------------------------------------------------------------- |
+| MacOS   | https://github.com/sadnessOjisan/hekopanda-cli-tools/releases/latest/download/hekopanda-x86_64-apple-darwin.zip |
+| Windows | TBD                                                                                                             |
+| Linux   | TBD                                                                                                             |
 
 ## How to use✋
 
